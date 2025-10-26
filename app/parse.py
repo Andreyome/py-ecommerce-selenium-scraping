@@ -18,8 +18,8 @@ TABLETS_URL = urljoin(COMPUTERS_URL, "tablets")
 PHONES_URL = urljoin(HOME_URL, "phones/")
 TOUCH_URL = urljoin(PHONES_URL, "touch")
 
-
 _driver: WebDriver | None = None
+
 
 @dataclass
 class Product:
@@ -33,11 +33,14 @@ class Product:
 def get_driver() -> WebDriver:
     return _driver
 
+
 def set_driver(driver: WebDriver) -> None:
     global _driver
     _driver = driver
 
+
 PRODUCT_FIELDS = [field.name for field in fields(Product)]
+
 
 def get_full_content(url: str) -> list[Product]:
     driver = get_driver()
@@ -60,15 +63,13 @@ def get_full_content(url: str) -> list[Product]:
         print(e)
     finally:
         products = driver.find_elements(By.CSS_SELECTOR, ".card.thumbnail")
-    result =[]
+    result = []
     for item in products:
         html = item.get_attribute("outerHTML")  # ← convert WebElement to HTML string
         soup = BeautifulSoup(html, "html.parser")  # ← parse as Tag
         product = parse_single_product(soup)
         result.append(product)
     return result
-
-
 
 
 def parse_single_product(product: Tag) -> Product:
@@ -91,12 +92,12 @@ def write_products_to_csv(products: list[Product], file_name: str) -> None:
 def get_all_products() -> None:
     with webdriver.Chrome() as driver:
         set_driver(driver)
-        write_products_to_csv(get_full_content(HOME_URL),"home.csv")
-        write_products_to_csv(get_full_content(COMPUTERS_URL),"computers.csv")
-        write_products_to_csv(get_full_content(LAPTOPS_URL),"laptops.csv")
-        write_products_to_csv(get_full_content(TABLETS_URL),"tablets.csv")
-        write_products_to_csv(get_full_content(PHONES_URL),"phones.csv")
-        write_products_to_csv(get_full_content(TOUCH_URL),"touch.csv")
+        write_products_to_csv(get_full_content(HOME_URL), "home.csv")
+        write_products_to_csv(get_full_content(COMPUTERS_URL), "computers.csv")
+        write_products_to_csv(get_full_content(LAPTOPS_URL), "laptops.csv")
+        write_products_to_csv(get_full_content(TABLETS_URL), "tablets.csv")
+        write_products_to_csv(get_full_content(PHONES_URL), "phones.csv")
+        write_products_to_csv(get_full_content(TOUCH_URL), "touch.csv")
 
 
 if __name__ == "__main__":
