@@ -75,7 +75,7 @@ def get_full_content(url: str) -> list[Product]:
 def parse_single_product(product: Tag) -> Product:
     return Product(
         title=product.select_one(".title")["title"],
-        description=product.select_one(".description").title,
+        description=product.select_one(".description").text,
         price=float(product.select_one(".price").text.replace("$", "")),
         rating=int(len(product.select(".ws-icon-star"))),
         num_of_reviews=int(product.select_one(".review-count").text.split()[0]),
